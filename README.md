@@ -11,7 +11,7 @@ The following scripts are available in this repo
 | [Homebrew](documentation/homebrew.md)            | Install Homebrew for the initial user            | Yes          | 10.13.4                 | [SplashBuddy](https://github.com/Shufflepuck/SplashBuddy)            |
 
 
-Donate To Support This Chef Cookbook
+Donate To Support These Scripts
 ------------
 Route 1337, LLC operates entirely on donations. If you find these scripts useful, please consider donating via one of these methods.
 
