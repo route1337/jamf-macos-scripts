@@ -10,6 +10,16 @@ The following scripts are available in this repo
 |------------------------------------------------- |--------------------------------------------------|--------------|-------------------------|----------------------------------------------------------------------|
 | [Homebrew](documentation/homebrew.md)            | Install Homebrew for the initial user            | Yes          | 10.13.4                 | [SplashBuddy](https://github.com/Shufflepuck/SplashBuddy)            |
 
+Extension Attributes
+------------
+The following extension attributes are available in this repo
+
+| Extension Attribute                              | Short Description                                                  | Recommended Inventory Display Location | macOS Versions Tested   |
+|------------------------------------------------- |--------------------------------------------------------------------|----------------------------------------|-------------------------|
+| HomebrewInstalled.sh                             | Check if Homebrew is installed                                     | Hardware                               | 10.13.4                 |
+| FusionSerialsNumbers.sh                          | Return the serial numbers detected for VMware Fusion 10+           | Extension Attributes                   | 10.13.4                 |
+| FirmwarePasswordCheck.sh                         | Check if the firmware password has been set                        | Extension Attributes                   | 10.13.4                 |
+| ARDStatus.sh                                     | Return the current status of Apple Remote Desktop                  | Operating System                       | 10.13.4                 |
 
 Donate To Support These Scripts
 ------------
