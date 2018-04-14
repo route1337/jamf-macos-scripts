@@ -1,6 +1,6 @@
 Jamf Pro Scripts for macOS Management - Homebrew
 ==============
-This script runs during the post-DEP SplashBuddy run and installs [Homebrew](brew.sh) for the initially created user
+This script runs during the post-DEP SplashBuddy run and installs [Homebrew](https://brew.sh) for the initially created user
 
 Requirements
 ------------
@@ -11,7 +11,7 @@ macOS Compatibility Matrix
 ------------
 This script has been tested on the following macOS versions
 
-| Tested macOS Major Version               | Tested Minor Versions                          | Expected Working Minor Verions      | DEP Required |
+| Tested macOS Major Version               | Tested Minor Versions                          | Expected Working Minor Versions     | DEP Required |
 |----------------------------------------- |------------------------------------------------|-------------------------------------|--------------|
 | High Sierra                              | 10.13.4                                        | 10.13.0-10.13.4                     | Yes          |
 
