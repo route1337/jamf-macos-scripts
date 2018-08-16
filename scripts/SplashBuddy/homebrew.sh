@@ -29,18 +29,18 @@ then
     /usr/bin/xcode-select --switch /Library/Developer/CommandLineTools
 fi
 
-# Test if Homebrew is installed and install it if it is not
+## Test if Homebrew is installed and install it if it is not
 if test ! "$(sudo -u $ConsoleUser which brew)"; then
   # Jamf will have to execute all of the directory creation functions Homebrew normally does so we can bypass the need for sudo
   /bin/chmod u+rwx /usr/local/bin
   /bin/chmod g+rwx /usr/local/bin
   /usr/sbin/chown $ConsoleUser /usr/local/bin
   /usr/bin/chgrp admin /usr/local/bin
-  /bin/mkdir -p /usr/local/Cellar /usr/local/Homebrew /usr/local/Frameworks /usr/local/etc /usr/local/include /usr/local/lib /usr/local/opt /usr/local/sbin /usr/local/share /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/var
-  /bin/chmod g+rwx /usr/local/Cellar /usr/local/Homebrew /usr/local/Frameworks /usr/local/etc /usr/local/include /usr/local/lib /usr/local/opt /usr/local/sbin /usr/local/share /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/var
-  /bin/chmod 755 /usr/local/share/zsh /usr/local/share/zsh/site-functions
-  /usr/sbin/chown $ConsoleUser /usr/local/Cellar /usr/local/Homebrew /usr/local/Frameworks /usr/local/etc /usr/local/include /usr/local/lib /usr/local/opt /usr/local/sbin /usr/local/share /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/var
-  /usr/bin/chgrp admin /usr/local/Cellar /usr/local/Homebrew /usr/local/Frameworks /usr/local/etc /usr/local/include /usr/local/lib /usr/local/opt /usr/local/sbin /usr/local/share /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/var
+  /bin/mkdir -p /usr/local/Cellar /usr/local/Homebrew /usr/local/Frameworks /usr/local/etc /usr/local/include /usr/local/lib /usr/local/opt /usr/local/sbin /usr/local/share /usr/local/share/man/man1 /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/var
+  /bin/chmod g+rwx /usr/local/Cellar /usr/local/Homebrew /usr/local/Frameworks /usr/local/etc /usr/local/include /usr/local/lib /usr/local/opt /usr/local/sbin /usr/local/share /usr/local/share/man/ /usr/local/share/man/man1  /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/var
+  /bin/chmod 755 /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/share/man/ /usr/local/share/man/man1 
+  /usr/sbin/chown $ConsoleUser /usr/local/Cellar /usr/local/Homebrew /usr/local/Frameworks /usr/local/etc /usr/local/include /usr/local/lib /usr/local/opt /usr/local/sbin /usr/local/share /usr/local/share/man/ /usr/local/share/man/man1 /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/var
+  /usr/bin/chgrp admin /usr/local/Cellar /usr/local/Homebrew /usr/local/Frameworks /usr/local/etc /usr/local/include /usr/local/lib /usr/local/opt /usr/local/sbin /usr/local/share /usr/local/share/man/ /usr/local/share/man/man1 /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/var
   /bin/mkdir -p /Users/$ConsoleUser/Library/Caches/Homebrew
   /bin/chmod g+rwx /Users/$ConsoleUser/Library/Caches/Homebrew
   /usr/sbin/chown $ConsoleUser /Users/$ConsoleUser/Library/Caches/Homebrew
@@ -49,8 +49,15 @@ if test ! "$(sudo -u $ConsoleUser which brew)"; then
   /usr/sbin/chown $ConsoleUser /Library/Caches/Homebrew
 
   # Install Homebrew as the currently logged in user
-  sudo -H -u $ConsoleUser ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  sudo -H -u $ConsoleUser ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"  </dev/null
 # If Homebrew is already installed then just echo that there is nothing to do
 else
-  echo "Nothing to do"
+  echo "Homebrew is already installed"
 fi
+
+  # Create folder 'Caskroom' and take ownership of it so sudo is not required 
+  /bin/mkdir -p /usr/local/Caskroom
+  /bin/chmod g+rwx /usr/local/Caskroom
+  /bin/chmod 755 /usr/local/Caskroom
+  /usr/sbin/chown $ConsoleUser /usr/local/Caskroom
+  /usr/bin/chgrp admin /usr/local/Caskroom
