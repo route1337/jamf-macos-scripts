@@ -6,9 +6,11 @@ Scripts
 ------------
 The following scripts are available in this repo
 
-| Script                                           | Short Description                                | DEP Required | macOS Versions Tested   | Deployment Methods Supported                                         |
-|------------------------------------------------- |--------------------------------------------------|--------------|-------------------------|----------------------------------------------------------------------|
-| [Homebrew](documentation/homebrew.md)            | Install Homebrew for the initial user            | Yes          | 10.13.4                 | [SplashBuddy](https://github.com/Shufflepuck/SplashBuddy)            |
+| Script                                                                | Short Description                                                  | DEP Required | macOS Versions Tested   | Deployment Methods Supported                                         |
+|---------------------------------------------------------------------- |--------------------------------------------------------------------|--------------|-------------------------|----------------------------------------------------------------------|
+| [Install Homebrew](documentation/installHomebrew.md)                  | Install Homebrew for the initial user                              | Yes          | 10.13.6                 | [SplashBuddy](https://github.com/Shufflepuck/SplashBuddy)            |
+| [Common Homebrew Packages](documentation/commonHomebrewPackages.md)   | Install common Homebrew brews and casks for the initial user       | Yes          | 10.13.6                 | [SplashBuddy](https://github.com/Shufflepuck/SplashBuddy)            |
+| [Install GPG Suite](documentation/installGPGSuite.md)                 | Install GPG Suite for the initial user                             | Yes          | 10.13.6                 | [SplashBuddy](https://github.com/Shufflepuck/SplashBuddy)            |
 
 Extension Attributes
 ------------

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Script Name: homebrew.sh
+# Script Name: installHomebrew.sh
 # Function: Deploy Homebrew (brew.sh) to the first user added to a new Mac during the post-DEP enrollment SplashBuddy run
 # Requirements: DEP, SplashBuddy
 #
@@ -9,11 +9,14 @@
 # Maintainers:
 # - Matthew Ahrenstein: matthew@route1337.com
 #
+# Contributors:
+# - "Dakr-xv": https://github.com/Dakr-xv
+#
 # See LICENSE
 #
 
 # Apple approved way to get the currently logged in user (Thanks to Froger from macadmins.org and https://developer.apple.com/library/content/qa/qa1133/_index.html)
-ConsoleUser="$(python -c 'from SystemConfiguration import SCDynamicStoreCopyConsoleUser; import sys; username = (SCDynamicStoreCopyConsoleUser(None, None, None) or [None])[0]; username = [username,""][username in [u"loginwindow", None, u""]]; sys.stdout.write(username + "\n");')"
+ConsoleUser="$(/usr/bin/python -c 'from SystemConfiguration import SCDynamicStoreCopyConsoleUser; import sys; username = (SCDynamicStoreCopyConsoleUser(None, None, None) or [None])[0]; username = [username,""][username in [u"loginwindow", None, u""]]; sys.stdout.write(username + "\n");')"
 
 # Check to see if we have XCode already
 checkForXcode=$( pkgutil --pkgs | grep com.apple.pkg.CLTools_Executables | wc -l | awk '{ print $1 }' )
@@ -29,7 +32,7 @@ then
     /usr/bin/xcode-select --switch /Library/Developer/CommandLineTools
 fi
 
-## Test if Homebrew is installed and install it if it is not
+# Test if Homebrew is installed and install it if it is not
 if test ! "$(sudo -u $ConsoleUser which brew)"; then
   # Jamf will have to execute all of the directory creation functions Homebrew normally does so we can bypass the need for sudo
   /bin/chmod u+rwx /usr/local/bin
@@ -50,7 +53,7 @@ if test ! "$(sudo -u $ConsoleUser which brew)"; then
 
   # Install Homebrew as the currently logged in user
   sudo -H -u $ConsoleUser ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"  </dev/null
-# If Homebrew is already installed then just echo that there is nothing to do
+# If Homebrew is already installed then just echo that it is already installed
 else
   echo "Homebrew is already installed"
 fi
