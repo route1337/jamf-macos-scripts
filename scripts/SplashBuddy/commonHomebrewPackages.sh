@@ -16,15 +16,16 @@
 ConsoleUser="$(/usr/bin/python -c 'from SystemConfiguration import SCDynamicStoreCopyConsoleUser; import sys; username = (SCDynamicStoreCopyConsoleUser(None, None, None) or [None])[0]; username = [username,""][username in [u"loginwindow", None, u""]]; sys.stdout.write(username + "\n");')"
 # Define the brews and casks we want to install
 brews=(ansible awscli csshx dc3dd dockutil git-crypt git-flow git-lfs gnu-sed jq packer rbenv ruby-build telnet terraform thefuck watch wget youtube-dl)
-#casks=(gpg-suite) # Be careful not to install casks that require prompting for sudo. This will not work in an automated fashion and will break the script. #TODO decide on needed casks
+#casks=(cryptomator) # Be careful not to install casks that require prompting for sudo. This will not work in an automated fashion and will break the script. #TODO decide on needed casks
 
 # Check if the brew is already installed. If not, install it
 for brew in ${brews[@]}; do
-    if [[ $(sudo -H -u ${ConsoleUser} brew info ${brew}) != *Not\ installed* ]]; then
+    cd /tmp/ # This is required to use sudo as another user or you get a getcwd error
+    if [[ $(sudo -H -iu ${ConsoleUser} /usr/local/bin/brew info ${brew}) != *Not\ installed* ]]; then
         echo "$brew is installed already. Skipping installation"
     else
         echo "$brew is either not installed or not available. Attempting installation..."
-        sudo -H -u ${ConsoleUser}  brew install ${brew}
+        sudo -H -iu ${ConsoleUser}  /usr/local/bin/brew install ${brew}
     fi
 done
 
