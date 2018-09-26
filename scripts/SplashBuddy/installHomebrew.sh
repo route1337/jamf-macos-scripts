@@ -24,10 +24,16 @@ checkForXcode=$( pkgutil --pkgs | grep com.apple.pkg.CLTools_Executables | wc -l
 # If XCode is missing we will install the Command Line tools only as that's all Homebrew needs
 if [[ "$checkForXcode" != 1 ]];
 then
+    osx_vers=$(sw_vers -productVersion | awk -F "." '{print $2}')
     # This temporary file prompts the 'softwareupdate' utility to list the Command Line Tools
     touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
-    clt=$(softwareupdate -l | grep -B 1 -E "Command Line (Developer|Tools)" | awk -F"*" '/^ +\\*/ {print $2}' | sed 's/^ *//' | tail -n1)
-    softwareupdate -i "$clt"
+    # Verify softwareupdate installs only the latest XCode (Original code from https://github.com/rtrouton/rtrouton_scripts)
+    cmd_line_tools=$(softwareupdate -l | awk '/\*\ Command Line Tools/ { $1=$1;print }' | grep "$osx_vers" | sed 's/^[[ \t]]*//;s/[[ \t]]*$//;s/*//' | cut -c 2-)
+    if (( $(grep -c . <<<"$cmd_line_tools") > 1 )); then
+	   cmd_line_tools_output="$cmd_line_tools"
+	   cmd_line_tools=$(printf "$cmd_line_tools_output" | tail -1)
+	fi
+    softwareupdate -i "$cmd_line_tools"
     rm -f /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
     /usr/bin/xcode-select --switch /Library/Developer/CommandLineTools
 fi
@@ -37,13 +43,12 @@ if test ! "$(sudo -u $ConsoleUser which brew)"; then
   # Jamf will have to execute all of the directory creation functions Homebrew normally does so we can bypass the need for sudo
   /bin/chmod u+rwx /usr/local/bin
   /bin/chmod g+rwx /usr/local/bin
-  /usr/sbin/chown $ConsoleUser /usr/local/bin
-  /usr/bin/chgrp admin /usr/local/bin
-  /bin/mkdir -p /usr/local/Cellar /usr/local/Homebrew /usr/local/Frameworks /usr/local/etc /usr/local/include /usr/local/lib /usr/local/opt /usr/local/sbin /usr/local/share /usr/local/share/man/man1 /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/var
-  /bin/chmod g+rwx /usr/local/Cellar /usr/local/Homebrew /usr/local/Frameworks /usr/local/etc /usr/local/include /usr/local/lib /usr/local/opt /usr/local/sbin /usr/local/share /usr/local/share/man/ /usr/local/share/man/man1  /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/var
-  /bin/chmod 755 /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/share/man/ /usr/local/share/man/man1 
-  /usr/sbin/chown $ConsoleUser /usr/local/Cellar /usr/local/Homebrew /usr/local/Frameworks /usr/local/etc /usr/local/include /usr/local/lib /usr/local/opt /usr/local/sbin /usr/local/share /usr/local/share/man/ /usr/local/share/man/man1 /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/var
-  /usr/bin/chgrp admin /usr/local/Cellar /usr/local/Homebrew /usr/local/Frameworks /usr/local/etc /usr/local/include /usr/local/lib /usr/local/opt /usr/local/sbin /usr/local/share /usr/local/share/man/ /usr/local/share/man/man1 /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/var
+  /bin/mkdir -p /usr/local/etc /usr/local/include /usr/local/lib /usr/local/sbin /usr/local/share /usr/local/var /usr/local/opt /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/var/homebrew /usr/local/var/homebrew/linked /usr/local/Cellar /usr/local/Caskroom /usr/local/Homebrew /usr/local/Frameworks
+  /bin/chmod 755 /usr/local/share/zsh /usr/local/share/zsh/site-functions
+  /bin/chmod g+rwx /usr/local/bin /usr/local/etc /usr/local/include /usr/local/lib /usr/local/sbin /usr/local/share /usr/local/var /usr/local/opt /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/var/homebrew /usr/local/var/homebrew/linked /usr/local/Cellar /usr/local/Caskroom /usr/local/Homebrew /usr/local/Frameworks
+  /bin/chmod 755 /usr/local/share/zsh /usr/local/share/zsh/site-functions
+  /usr/sbin/chown $ConsoleUser /usr/local/bin /usr/local/etc /usr/local/include /usr/local/lib /usr/local/sbin /usr/local/share /usr/local/var /usr/local/opt /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/var/homebrew /usr/local/var/homebrew/linked /usr/local/Cellar /usr/local/Caskroom /usr/local/Homebrew /usr/local/Frameworks
+  /usr/bin/chgrp admin /usr/local/bin /usr/local/etc /usr/local/include /usr/local/lib /usr/local/sbin /usr/local/share /usr/local/var /usr/local/opt /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/var/homebrew /usr/local/var/homebrew/linked /usr/local/Cellar /usr/local/Caskroom /usr/local/Homebrew /usr/local/Frameworks
   /bin/mkdir -p /Users/$ConsoleUser/Library/Caches/Homebrew
   /bin/chmod g+rwx /Users/$ConsoleUser/Library/Caches/Homebrew
   /usr/sbin/chown $ConsoleUser /Users/$ConsoleUser/Library/Caches/Homebrew
@@ -51,16 +56,10 @@ if test ! "$(sudo -u $ConsoleUser which brew)"; then
   /bin/chmod g+rwx /Library/Caches/Homebrew
   /usr/sbin/chown $ConsoleUser /Library/Caches/Homebrew
 
+
   # Install Homebrew as the currently logged in user
   sudo -H -u $ConsoleUser ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"  </dev/null
 # If Homebrew is already installed then just echo that it is already installed
 else
   echo "Homebrew is already installed"
 fi
-
-  # Create folder 'Caskroom' and take ownership of it so sudo is not required 
-  /bin/mkdir -p /usr/local/Caskroom
-  /bin/chmod g+rwx /usr/local/Caskroom
-  /bin/chmod 755 /usr/local/Caskroom
-  /usr/sbin/chown $ConsoleUser /usr/local/Caskroom
-  /usr/bin/chgrp admin /usr/local/Caskroom
