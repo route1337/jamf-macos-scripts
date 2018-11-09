@@ -6,9 +6,11 @@ Scripts
 ------------
 The following scripts are available in this repo
 
-| Script                                           | Short Description                                | DEP Required | macOS Versions Tested   | Deployment Methods Supported                                         |
-|------------------------------------------------- |--------------------------------------------------|--------------|-------------------------|----------------------------------------------------------------------|
-| [Homebrew](documentation/homebrew.md)            | Install Homebrew for the initial user            | Yes          | 10.13.4                 | [SplashBuddy](https://github.com/Shufflepuck/SplashBuddy)            |
+| Script                                                                | Short Description                                                  | DEP Required | macOS Versions Tested   | Deployment Methods Supported                                         |
+|---------------------------------------------------------------------- |--------------------------------------------------------------------|--------------|-------------------------|----------------------------------------------------------------------|
+| [Install Homebrew](documentation/installHomebrew.md)                  | Install Homebrew for the initial user                              | Yes          | 10.13.6                 | [SplashBuddy](https://github.com/Shufflepuck/SplashBuddy)            |
+| [Common Homebrew Packages](documentation/commonHomebrewPackages.md)   | Install common Homebrew brews and casks for the initial user       | Yes          | 10.13.6                 | [SplashBuddy](https://github.com/Shufflepuck/SplashBuddy)            |
+| [Install GPG Suite](documentation/installGPGSuite.md)                 | Install GPG Suite for the initial user                             | Yes          | 10.13.6                 | [SplashBuddy](https://github.com/Shufflepuck/SplashBuddy)            |
 
 Extension Attributes
 ------------
@@ -23,11 +25,6 @@ The following extension attributes are available in this repo
 
 Donate To Support These Scripts
 ------------
-Route 1337, LLC operates entirely on donations. If you find these scripts useful, please consider donating via one of these methods.
-
-1. Bitcoin: 1CnzzrPh3iirEkLRLiWFKXDV9i5TXHQjE2
-2. Bitcoin Cash: qzcq645swgd87s7t5mmmjcumf4armhtjt5euww5c29
-3. Litecoin: LWYbc9hf5ErJsF874Q3wwmMiASHRWgwrjR
-4. Ethereum: 0x117543aa7a4D704849171cA06568Ece71B111D18
+Route 1337, LLC operates entirely on donations. If you find these scripts useful, please consider [contacting us](https://www.route1337.com/contact-us/) about how to donate.
 
 Thank you for your support!
