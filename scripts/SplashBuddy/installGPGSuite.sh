@@ -18,7 +18,7 @@
 ### Variables ###
 
 # Get the link for latest GPGSuite download link
-GPGSuite_URL=$(curl -L https://gpgtools.org/gpgsuite.html | grep "Download" | awk '{print $2}' | grep 'http' | cut -f2 -d'"')
+GPGSuite_URL=$(curl -L https://gpgtools.org/gpgsuite.html | grep "dmg" | awk '{print $3}' | grep 'https' | cut -f2 -d'"')
 
 # Name of the DMG file that will be downloaded
 GPGSuite_DMG=$(echo "${GPGSuite_URL}" | cut -f4 -d"/")
