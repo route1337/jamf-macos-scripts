@@ -1,10 +1,10 @@
 #!/bin/bash
 #
 # Script Name: installHomebrew.sh
-# Function: Deploy Homebrew (brew.sh) to the first user added to a new Mac during the post-DEP enrollment SplashBuddy run
-# Requirements: DEP, SplashBuddy
+# Function: Deploy Homebrew (brew.sh) to the first user added to a new Mac during the post-DEP enrollment DEPNotify run
+# Requirements: DEP, Jamf
 #
-# Copyright 2018, Route 1337, LLC, All Rights Reserved.
+# Copyright 2019, Route 1337, LLC, All Rights Reserved.
 #
 # Maintainers:
 # - Matthew Ahrenstein: matthew@route1337.com
@@ -22,20 +22,27 @@ ConsoleUser="$(/usr/bin/python -c 'from SystemConfiguration import SCDynamicStor
 checkForXcode=$( pkgutil --pkgs | grep com.apple.pkg.CLTools_Executables | wc -l | awk '{ print $1 }' )
 
 # If XCode is missing we will install the Command Line tools only as that's all Homebrew needs
-if [[ "$checkForXcode" != 1 ]];
-then
-    osx_vers=$(sw_vers -productVersion | awk -F "." '{print $2}')
-    # This temporary file prompts the 'softwareupdate' utility to list the Command Line Tools
-    touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
-    # Verify softwareupdate installs only the latest XCode (Original code from https://github.com/rtrouton/rtrouton_scripts)
-    cmd_line_tools=$(softwareupdate -l | awk '/\*\ Command Line Tools/ { $1=$1;print }' | grep "$osx_vers" | sed 's/^[[ \t]]*//;s/[[ \t]]*$//;s/*//' | cut -c 2-)
-    if (( $(grep -c . <<<"$cmd_line_tools") > 1 )); then
-	   cmd_line_tools_output="$cmd_line_tools"
-	   cmd_line_tools=$(printf "$cmd_line_tools_output" | tail -1)
-	fi
-    softwareupdate -i "$cmd_line_tools"
-    rm -f /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
-    /usr/bin/xcode-select --switch /Library/Developer/CommandLineTools
+if [[ "$checkForXcode" != 1 ]]; then
+  macos_vers=$(sw_vers -productVersion | awk -F "." '{print $2}')
+  # This temporary file prompts the 'softwareupdate' utility to list the Command Line Tools
+  touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+  # Verify softwareupdate installs only the latest XCode (Original code from https://github.com/rtrouton/rtrouton_scripts)
+  if [[ "$macos_vers" -ge 15 ]]; then
+     cmd_line_tools=$(softwareupdate -l | awk '/\*\ Label: Command Line Tools/ { $1=$1;print }' | sed 's/^[[ \t]]*//;s/[[ \t]]*$//;s/*//' | cut -c 9-)
+  elif [[ "$macos_vers" -gt 9 ]] && [[ "$macos_vers" -lt 14 ]]; then
+     cmd_line_tools=$(softwareupdate -l | awk '/\*\ Command Line Tools/ { $1=$1;print }' | grep "$macos_vers" | sed 's/^[[ \t]]*//;s/[[ \t]]*$//;s/*//' | cut -c 2-)
+  elif [[ "$macos_vers" -eq 9 ]]; then
+     cmd_line_tools=$(softwareupdate -l | awk '/\*\ Command Line Tools/ { $1=$1;print }' | grep "Mavericks" | sed 's/^[[ \t]]*//;s/[[ \t]]*$//;s/*//' | cut -c 2-)
+  fi
+  if (( $(grep -c . <<<"$cmd_line_tools") > 1 )); then
+     cmd_line_tools_output="$cmd_line_tools"
+     cmd_line_tools=$(printf "$cmd_line_tools_output" | tail -1)
+  fi
+
+  softwareupdate -i "$cmd_line_tools"
+
+  rm -f /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+  /usr/bin/xcode-select --switch /Library/Developer/CommandLineTools
 fi
 
 # Test if Homebrew is installed and install it if it is not
@@ -59,6 +66,8 @@ if test ! "$(sudo -u $ConsoleUser which brew)"; then
 
   # Install Homebrew as the currently logged in user
   sudo -H -u $ConsoleUser ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"  </dev/null
+  # Disable Homebrew analytics
+  sudo -H -iu ${ConsoleUser} /usr/local/bin/brew analytics off  </dev/null
 # If Homebrew is already installed then just echo that it is already installed
 else
   echo "Homebrew is already installed"

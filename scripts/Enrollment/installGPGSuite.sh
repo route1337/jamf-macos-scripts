@@ -2,9 +2,9 @@
 #
 # Script Name: installGPGSuite.sh
 # Function: This script grabs and installs the latest GPG Suite so you don't have to maintain packages
-# Requirements: DEP, SplashBuddy
+# Requirements: DEP, Jamf
 #
-# Copyright 2018, Route 1337, LLC, All Rights Reserved.
+# Copyright 2019, Route 1337, LLC, All Rights Reserved.
 #
 # Maintainers:
 # - Matthew Ahrenstein: matthew@route1337.com
