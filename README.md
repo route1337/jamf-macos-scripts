@@ -25,6 +25,6 @@ The following extension attributes are available in this repo
 
 Donate To Support These Scripts
 ------------
-Route 1337, LLC operates entirely on donations. If you find these scripts useful, please consider [contacting us](https://www.route1337.com/contact-us/) about how to donate.
+Route 1337, LLC operates entirely on donations. If you find these scripts useful, please consider using the GitHub Sponsors button to donate to the people who contributed to this project.
 
 Thank you for your support!
