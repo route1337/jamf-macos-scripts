@@ -2,9 +2,9 @@
 #
 # Script Name: installGPGSuite.sh
 # Function: This script grabs and installs the latest GPG Suite so you don't have to maintain packages
-# Requirements: DEP, SplashBuddy
+# Requirements: DEP, Jamf
 #
-# Copyright 2018, Route 1337, LLC, All Rights Reserved.
+# Copyright 2019, Route 1337, LLC, All Rights Reserved.
 #
 # Maintainers:
 # - Matthew Ahrenstein: matthew@route1337.com
@@ -18,7 +18,7 @@
 ### Variables ###
 
 # Get the link for latest GPGSuite download link
-GPGSuite_URL=$(curl -L https://gpgtools.org/gpgsuite.html | grep "Download" | awk '{print $2}' | grep 'http' | cut -f2 -d'"')
+GPGSuite_URL=$(curl -L https://gpgtools.org/gpgsuite.html | grep "dmg" | awk '{print $3}' | grep 'https' | cut -f2 -d'"')
 
 # Name of the DMG file that will be downloaded
 GPGSuite_DMG=$(echo "${GPGSuite_URL}" | cut -f4 -d"/")

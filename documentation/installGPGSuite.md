@@ -5,15 +5,15 @@ This script runs during the post-DEP SplashBuddy run and installs [GPG Suite](ht
 Requirements
 ------------
 1. DEP: Yes 
-2. [SplashBuddy](https://github.com/Shufflepuck/SplashBuddy): Yes
+2. [Jamf](https://www.jamf.com/products/jamf-pro/): Yes
 
 macOS Compatibility Matrix
 ------------
 This script has been tested on the following macOS versions
 
-| Tested macOS Major Version               | Tested Minor Versions                          | Expected Working Minor Versions     | DEP Required |
-|------------------------------------------|------------------------------------------------|-------------------------------------|--------------|
-| Mojave                                   | 10.14                                          | 10.13.0-10.14.0                     | Yes          |
+| Tested macOS Major Version               | Expected Working Minor Versions     | DEP Required |
+|------------------------------------------|-------------------------------------|--------------|
+| Mojave, Catalina                         | 10.13.0-10.15.0                     | Yes          |
 
 Script Operations
 ------------

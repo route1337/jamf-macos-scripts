@@ -1,10 +1,10 @@
 #!/bin/bash
 #
 # Script Name: commonHomebrewPackages.sh
-# Function: Install some common Homebrew (brew.sh) brews and casks to the first user added to a new Mac during the post-DEP enrollment SplashBuddy run
-# Requirements: DEP, SplashBuddy, Homebrew
+# Function: Install some common Homebrew (brew.sh) brews and casks to the first user added to a new Mac during the post-DEP enrollment DEPNotify run
+# Requirements: DEP, Jamf, Homebrew
 #
-# Copyright 2018, Route 1337, LLC, All Rights Reserved.
+# Copyright 2019, Route 1337, LLC, All Rights Reserved.
 #
 # Maintainers:
 # - Matthew Ahrenstein: matthew@route1337.com

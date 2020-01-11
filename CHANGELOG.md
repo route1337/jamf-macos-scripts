@@ -2,6 +2,12 @@ Jamf Pro Scripts for macOS Management - Changelog
 ==============
 A list of all the changes made to this repo
 
+Version 0.1.3
+-------------
+
+1. Testing against DEPNotify now instead of SplashBuddy.
+2. Install Homebrew script fixed for Catalina
+
 Version 0.1.2
 ------------
 
