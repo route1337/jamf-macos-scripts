@@ -1,6 +1,6 @@
-Jamf Pro Scripts for macOS Management - Install Homebrew
+Jamf Pro Scripts for macOS Management - Configure Terminal
 ==============
-This script runs during the post-DEP SplashBuddy run and installs [Homebrew](https://brew.sh) for the initially created user
+This script runs during the post-DEP DEPNotify run and Configures the first user's Terminal with some custom settings
 
 Requirements
 ------------
@@ -19,15 +19,12 @@ Script Operations
 ------------
 This script will perform the following operations
 
-1. Check for and install latest XCode Command-line Tools
-2. Check for and install Homebrew for the initially created user
+1. Deploy a custom `.zshrc` to the initial user during DEP enrollment.
 
 Limitations
 ------------
 
-1. This script requires access to Apple for XCode Command-line Tools installation
-2. This script requires access to brew.sh and github.com for Homebrew installation
-3. This script requires an initial user to be created by the end user during the macOS OOBE 
+1. This script requires access to a [specific GitHub repo](https://github.com/ahrenstein/noodling)
 
 Known Issues
 ------------
@@ -35,6 +32,6 @@ Known Issues
 
 Use Cases
 ------------
-Getting Homebrew setup for the end user or for automated brew package installations in later scripts
+Configure Terminal with some custom engineering configurations
 
 [Back to main README](../README.md)

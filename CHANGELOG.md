@@ -5,8 +5,12 @@ A list of all the changes made to this repo
 Version 0.1.3
 -------------
 
-1. Testing against DEPNotify now instead of SplashBuddy.
-2. Install Homebrew script fixed for Catalina
+1. Testing against DEPNotify now instead of SplashBuddy
+2. Install Homebrew script fixed for Catalina and latest HomeBrew
+3. Common Brews script updated with new list of brews
+4. Updated Copyright year for all files
+5. All files have a proper blank line at the end
+6. Adding basic Terminal configuration
 
 Version 0.1.2
 ------------

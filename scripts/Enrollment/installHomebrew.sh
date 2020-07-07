@@ -4,7 +4,7 @@
 # Function: Deploy Homebrew (brew.sh) to the first user added to a new Mac during the post-DEP enrollment DEPNotify run
 # Requirements: DEP, Jamf
 #
-# Copyright 2019, Route 1337, LLC, All Rights Reserved.
+# Copyright 2020, Route 1337, LLC, All Rights Reserved.
 #
 # Maintainers:
 # - Matthew Ahrenstein: matthew@route1337.com
@@ -48,26 +48,39 @@ fi
 # Test if Homebrew is installed and install it if it is not
 if test ! "$(sudo -u $ConsoleUser which brew)"; then
   # Jamf will have to execute all of the directory creation functions Homebrew normally does so we can bypass the need for sudo
-  /bin/chmod u+rwx /usr/local/bin
-  /bin/chmod g+rwx /usr/local/bin
-  /bin/mkdir -p /usr/local/etc /usr/local/include /usr/local/lib /usr/local/sbin /usr/local/share /usr/local/var /usr/local/opt /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/var/homebrew /usr/local/var/homebrew/linked /usr/local/Cellar /usr/local/Caskroom /usr/local/Homebrew /usr/local/Frameworks
-  /bin/chmod 755 /usr/local/share/zsh /usr/local/share/zsh/site-functions
-  /bin/chmod g+rwx /usr/local/bin /usr/local/etc /usr/local/include /usr/local/lib /usr/local/sbin /usr/local/share /usr/local/var /usr/local/opt /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/var/homebrew /usr/local/var/homebrew/linked /usr/local/Cellar /usr/local/Caskroom /usr/local/Homebrew /usr/local/Frameworks
-  /bin/chmod 755 /usr/local/share/zsh /usr/local/share/zsh/site-functions
-  /usr/sbin/chown $ConsoleUser /usr/local/bin /usr/local/etc /usr/local/include /usr/local/lib /usr/local/sbin /usr/local/share /usr/local/var /usr/local/opt /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/var/homebrew /usr/local/var/homebrew/linked /usr/local/Cellar /usr/local/Caskroom /usr/local/Homebrew /usr/local/Frameworks
-  /usr/bin/chgrp admin /usr/local/bin /usr/local/etc /usr/local/include /usr/local/lib /usr/local/sbin /usr/local/share /usr/local/var /usr/local/opt /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/var/homebrew /usr/local/var/homebrew/linked /usr/local/Cellar /usr/local/Caskroom /usr/local/Homebrew /usr/local/Frameworks
-  /bin/mkdir -p /Users/$ConsoleUser/Library/Caches/Homebrew
-  /bin/chmod g+rwx /Users/$ConsoleUser/Library/Caches/Homebrew
-  /usr/sbin/chown $ConsoleUser /Users/$ConsoleUser/Library/Caches/Homebrew
-  /bin/mkdir -p /Library/Caches/Homebrew
-  /bin/chmod g+rwx /Library/Caches/Homebrew
-  /usr/sbin/chown $ConsoleUser /Library/Caches/Homebrew
 
+  # Manually install the initial Homebrew
+  /bin/mkdir -p /usr/local/Homebrew
+  curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C /usr/local/Homebrew
 
-  # Install Homebrew as the currently logged in user
-  sudo -H -u $ConsoleUser ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"  </dev/null
+  # Core directories
+  /bin/mkdir -p /usr/local/Cellar /usr/local/Homebrew /usr/local/Frameworks /usr/local/bin /usr/local/etc /usr/local/Caskroom
+  /bin/mkdir -p /usr/local/include /usr/local/lib /usr/local/opt /usr/local/sbin /usr/local/var/homebrew/linked
+  /bin/mkdir -p /usr/local/share/zsh/site-functions /usr/local/var
+  /bin/mkdir -p /usr/local/share/doc /usr/local/man/man1 /usr/local/share/man/man1
+  /usr/sbin/chown -R $ConsoleUser:admin /usr/local/*
+  /bin/chmod -Rf g+rwx /usr/local/*
+  /bin/chmod 755 /usr/local/share/zsh /usr/local/share/zsh/site-functions
+
+  # Cache directories
+  mkdir -p /Library/Caches/Homebrew
+  chmod g+rwx /Library/Caches/Homebrew
+  chown $ConsoleUser:staff /Library/Caches/Homebrew
+
+  # Create a system wide cache folder
+  mkdir -p /Library/Caches/Homebrew
+  chmod g+rwx /Library/Caches/Homebrew
+  chown $ConsoleUser:staff /Library/Caches/Homebrew
+
+  # Symlink Homebrew to the usual place
+  ln -s /usr/local/Homebrew/bin/brew /usr/local/bin/brew
+
+  # Run an initial update
+  sudo -H -iu ${ConsoleUser} /usr/local/bin/brew update  </dev/null
+
   # Disable Homebrew analytics
   sudo -H -iu ${ConsoleUser} /usr/local/bin/brew analytics off  </dev/null
+
 # If Homebrew is already installed then just echo that it is already installed
 else
   echo "Homebrew is already installed"
