@@ -13,7 +13,7 @@ This script has been tested on the following macOS versions
 
 | Tested macOS Major Version               | Expected Working Minor Versions     | DEP Required |
 |------------------------------------------|-------------------------------------|--------------|
-| Catalina                                 | 10.15.0-10.15.5                     | Yes          |
+| Catalina                                 | 11.0.1(I)                           | Yes          |
 
 Script Operations
 ------------
@@ -30,7 +30,6 @@ The following brews and casks are installed
 |--------------------------------|---------------|-------------------------------------------------------------------------------|
 | ahrenstein/taps                | tap           | A custom tap that has Duo Support for JumpCLoud in saml2aws                   |
 | parera10/csshx                 | tap           | A custom tap that has a fixed csshx package                                   |
-| aerial                         | cask          | Screensaver that uses the same Aerial footage as AppleTV's Aerials            |
 | ansible                        | brew          | Configuration management tool commonly used by admins                         |
 | ansible-lint                   | brew          | A linting tool for Ansible code                                               |
 | awscli                         | brew          | AWS commandline tools                                                         |

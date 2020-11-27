@@ -13,7 +13,7 @@ This script has been tested on the following macOS versions
 
 | Tested macOS Major Version               | Expected Working Minor Versions     | DEP Required |
 |------------------------------------------|-------------------------------------|--------------|
-| Catalina                                 | 10.15.0-10.15.5                     | Yes          |
+| Catalina                                 | 11.0.1(I)                           | Yes          |
 
 Script Operations
 ------------
