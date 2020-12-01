@@ -42,3 +42,6 @@ sudo hdiutil detach /Volumes/GPG\ Suite
 
 # Delete the locally saved DMG
 sudo rm -rf ${GPGSuite_LocalDMG}
+
+# Kill any running mail upgraders so DEPNotify can finish
+sudo killall "GPG Mail Upgrader"
