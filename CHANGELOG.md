@@ -2,6 +2,16 @@ Jamf Pro Scripts for macOS Management - Changelog
 ==============
 A list of all the changes made to this repo
 
+Version 0.1.4
+-------------
+
+1. Install Homebrew script fixed for Big Sur (Intel) and latest HomeBrew
+2. Common Brews script updated with new list of brews
+3. Fixed some documentation
+4. Dropping support for installs below Big Sur 11.0.1
+5. Fixed Terminal script due to a public URL change
+6. GPG Suite installer now kills GPG Mail Upgrader processes so DEPNotify can complete
+
 Version 0.1.3
 -------------
 
