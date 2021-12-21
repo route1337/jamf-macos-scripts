@@ -1,6 +1,6 @@
 Jamf Pro Scripts for macOS Management - Install Homebrew
 ==============
-This script runs during the post-DEP SplashBuddy run and installs [Homebrew](https://brew.sh) for the initially created user
+This script runs during the post-DEP DEPNotify run and installs [Homebrew](https://brew.sh) for the initially created user
 
 Requirements
 ------------
@@ -13,7 +13,7 @@ This script has been tested on the following macOS versions
 
 | Tested macOS Major Version               | Expected Working Minor Versions     | DEP Required |
 |------------------------------------------|-------------------------------------|--------------|
-| Catalina                                 | 11.0.1(I)                           | Yes          |
+| Monterey                                 | 12.1                                | Yes          |
 
 Script Operations
 ------------

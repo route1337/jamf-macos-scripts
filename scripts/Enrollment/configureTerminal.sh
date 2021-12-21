@@ -4,7 +4,7 @@
 # Function: Configure Terminal for the first user added to a new Mac during the post-DEP enrollment DEPNotify run
 # Requirements: DEP, Jamf, Homebrew
 #
-# Copyright 2020, Route 1337, LLC, All Rights Reserved.
+# Copyright 2020-2022, Route 1337, LLC, All Rights Reserved.
 #
 # Maintainers:
 # - Matthew Ahrenstein: matthew@route1337.com
@@ -19,5 +19,3 @@ zsh_config="https://raw.githubusercontent.com/ahrenstein/noodling/main/zsh/mac-z
 
 # Download a zsh configuration for the current user
 sudo -H -iu ${ConsoleUser} /usr/bin/curl https://raw.githubusercontent.com/ahrenstein/noodling/main/zsh/mac-zshrc > /Users/${ConsoleUser}/.zshrc
-
-#TODO additional Terminal configuration such as the prompt

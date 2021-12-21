@@ -2,6 +2,12 @@ Jamf Pro Scripts for macOS Management - Changelog
 ==============
 A list of all the changes made to this repo
 
+Version 0.1.5
+-------------
+
+1. Common Brews script reduced the list of taps and brews in favor of this [optional repo](https://github.com/route1337/devops-mac)
+2. Initial support for Apple Silicon machines
+
 Version 0.1.4
 -------------
 
