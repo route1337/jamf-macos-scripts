@@ -73,28 +73,38 @@ echo "Checking if Homebrew is installed..."
 if test ! "$(sudo -u ${ConsoleUser} which brew)"; then
     if [[ "$IS_ARM" == 0 ]];then
       echo "Installing x86_64 Homebrew..."
-      /bin/mkdir -p /usr/local/bin
-      /bin/chmod u+rwx /usr/local/bin
-      /bin/chmod g+rwx /usr/local/bin
-      /bin/mkdir -p /usr/local/etc /usr/local/include /usr/local/lib /usr/local/sbin /usr/local/share /usr/local/var /usr/local/opt /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/var/homebrew /usr/local/var/homebrew/linked /usr/local/Cellar /usr/local/Caskroom /usr/local/Homebrew /usr/local/Frameworks
+      # Manually install the initial Homebrew
+      /bin/mkdir -p /usr/local/Homebrew
+      curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C /usr/local/Homebrew
+
+      # Core directories
+      /bin/mkdir -p /usr/local/Cellar /usr/local/Homebrew /usr/local/Frameworks /usr/local/bin /usr/local/etc /usr/local/Caskroom
+      /bin/mkdir -p /usr/local/include /usr/local/lib /usr/local/opt /usr/local/sbin /usr/local/var/homebrew/linked
+      /bin/mkdir -p /usr/local/share/zsh/site-functions /usr/local/var
+      /bin/mkdir -p /usr/local/share/doc /usr/local/man/man1 /usr/local/share/man/man1
+      /usr/sbin/chown -R $ConsoleUser:admin /usr/local/*
+      /bin/chmod -Rf g+rwx /usr/local/*
       /bin/chmod 755 /usr/local/share/zsh /usr/local/share/zsh/site-functions
-      /bin/chmod g+rwx /usr/local/bin /usr/local/etc /usr/local/include /usr/local/lib /usr/local/sbin /usr/local/share /usr/local/var /usr/local/opt /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/var/homebrew /usr/local/var/homebrew/linked /usr/local/Cellar /usr/local/Caskroom /usr/local/Homebrew /usr/local/Frameworks
-      /bin/chmod 755 /usr/local/share/zsh /usr/local/share/zsh/site-functions
-      /usr/sbin/chown ${ConsoleUser} /usr/local/bin /usr/local/etc /usr/local/include /usr/local/lib /usr/local/sbin /usr/local/share /usr/local/var /usr/local/opt /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/var/homebrew /usr/local/var/homebrew/linked /usr/local/Cellar /usr/local/Caskroom /usr/local/Homebrew /usr/local/Frameworks
-      /usr/bin/chgrp admin /usr/local/bin /usr/local/etc /usr/local/include /usr/local/lib /usr/local/sbin /usr/local/share /usr/local/var /usr/local/opt /usr/local/share/zsh /usr/local/share/zsh/site-functions /usr/local/var/homebrew /usr/local/var/homebrew/linked /usr/local/Cellar /usr/local/Caskroom /usr/local/Homebrew /usr/local/Frameworks
-      /bin/mkdir -p /Users/${ConsoleUser}/Library/Caches/Homebrew
-      /bin/chmod g+rwx /Users/${ConsoleUser}/Library/Caches/Homebrew
-      /usr/sbin/chown ${ConsoleUser} /Users/${ConsoleUser}/Library/Caches/Homebrew
-      /bin/mkdir -p /Library/Caches/Homebrew
-      /bin/chmod g+rwx /Library/Caches/Homebrew
-      /usr/sbin/chown ${ConsoleUser} /Library/Caches/Homebrew
+
+      # Cache directories
+      mkdir -p /Library/Caches/Homebrew
+      chmod g+rwx /Library/Caches/Homebrew
+      chown $ConsoleUser:staff /Library/Caches/Homebrew
+
+      # Create a system wide cache folder
+      mkdir -p /Library/Caches/Homebrew
+      chmod g+rwx /Library/Caches/Homebrew
+      chown $ConsoleUser:staff /Library/Caches/Homebrew
+
+      # Symlink Homebrew to the usual place
+      ln -s /usr/local/Homebrew/bin/brew /usr/local/bin/brew
     else
       echo "Installing arm64 Homebrew..."
       /bin/mkdir -p /opt/homebrew
-      /bin/chmod u+rwx /opt/homebrew
-      /usr/sbin/chown ${ConsoleUser} /opt/homebrew
+      curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C -C /opt/homebrew
+      /bin/chmod -Rf u+rwx /opt/homebrew
+      /usr/sbin/chown -Rf ${ConsoleUser} /opt/homebrew
     fi
-    sudo -H -u ${ConsoleUser} /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
     echo "Disabling Homebrew analytics..."
     sudo -H -iu ${ConsoleUser} ${BREW_BIN_PATH}/brew analytics off
 else
