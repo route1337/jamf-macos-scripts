@@ -101,7 +101,7 @@ if test ! "$(sudo -u ${ConsoleUser} which brew)"; then
     else
       echo "Installing arm64 Homebrew..."
       /bin/mkdir -p /opt/homebrew
-      curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C -C /opt/homebrew
+      curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C /opt/homebrew
       /bin/chmod -Rf u+rwx /opt/homebrew
       /usr/sbin/chown -Rf ${ConsoleUser} /opt/homebrew
     fi
