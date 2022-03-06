@@ -26,6 +26,6 @@ The following extension attributes are available in this repo
 
 Donate To Support These Scripts
 ------------
-Route 1337, LLC operates entirely on donations. If you find these Vagrant boxes useful, please consider using the GitHub Sponsors button to show your continued support.
+Route 1337, LLC operates entirely on donations. If you find these scripts useful, please consider using the GitHub Sponsors button to show your continued support.
 
 Thank you for your support!
