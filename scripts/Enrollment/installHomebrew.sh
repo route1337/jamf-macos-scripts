@@ -4,7 +4,7 @@
 # Function: Deploy Homebrew (brew.sh) to the first user added to a new Mac during the post-DEP enrollment DEPNotify run
 # Requirements: DEP, Jamf
 #
-# Copyright 2020, Route 1337, LLC, All Rights Reserved.
+# Copyright 2020-2022, Route 1337, LLC, All Rights Reserved.
 #
 # Maintainers:
 # - Matthew Ahrenstein: matthew@route1337.com
@@ -14,6 +14,15 @@
 #
 # See LICENSE
 #
+
+# Check if Apple Silicon
+if [ "$(uname -m)" == "arm64" ]; then
+	IS_ARM=1
+	BREW_BIN_PATH="/opt/homebrew/bin"
+else
+	IS_ARM=0
+	BREW_BIN_PATH="/usr/local/bin"
+fi
 
 # Apple approved way to get the currently logged in user (Thanks to Froger from macadmins.org and https://developer.apple.com/library/content/qa/qa1133/_index.html)
 ConsoleUser="$(/usr/bin/python -c 'from SystemConfiguration import SCDynamicStoreCopyConsoleUser; import sys; username = (SCDynamicStoreCopyConsoleUser(None, None, None) or [None])[0]; username = [username,""][username in [u"loginwindow", None, u""]]; sys.stdout.write(username + "\n");')"
@@ -59,42 +68,46 @@ if [[ "$checkForXcode" != 1 ]]; then
 fi
 
 # Test if Homebrew is installed and install it if it is not
-if test ! "$(sudo -u $ConsoleUser which brew)"; then
-  # Jamf will have to execute all of the directory creation functions Homebrew normally does so we can bypass the need for sudo
+### INSTALL HOMEBREW ###
+echo "Checking if Homebrew is installed..."
+if test ! "$(sudo -u ${ConsoleUser} which brew)"; then
+    if [[ "$IS_ARM" == 0 ]];then
+      echo "Installing x86_64 Homebrew..."
+      # Manually install the initial Homebrew
+      /bin/mkdir -p /usr/local/Homebrew
+      curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C /usr/local/Homebrew
 
-  # Manually install the initial Homebrew
-  /bin/mkdir -p /usr/local/Homebrew
-  curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C /usr/local/Homebrew
+      # Core directories
+      /bin/mkdir -p /usr/local/Cellar /usr/local/Homebrew /usr/local/Frameworks /usr/local/bin /usr/local/etc /usr/local/Caskroom
+      /bin/mkdir -p /usr/local/include /usr/local/lib /usr/local/opt /usr/local/sbin /usr/local/var/homebrew/linked
+      /bin/mkdir -p /usr/local/share/zsh/site-functions /usr/local/var
+      /bin/mkdir -p /usr/local/share/doc /usr/local/man/man1 /usr/local/share/man/man1
+      /usr/sbin/chown -R $ConsoleUser:admin /usr/local/*
+      /bin/chmod -Rf g+rwx /usr/local/*
+      /bin/chmod 755 /usr/local/share/zsh /usr/local/share/zsh/site-functions
 
-  # Core directories
-  /bin/mkdir -p /usr/local/Cellar /usr/local/Homebrew /usr/local/Frameworks /usr/local/bin /usr/local/etc /usr/local/Caskroom
-  /bin/mkdir -p /usr/local/include /usr/local/lib /usr/local/opt /usr/local/sbin /usr/local/var/homebrew/linked
-  /bin/mkdir -p /usr/local/share/zsh/site-functions /usr/local/var
-  /bin/mkdir -p /usr/local/share/doc /usr/local/man/man1 /usr/local/share/man/man1
-  /usr/sbin/chown -R $ConsoleUser:admin /usr/local/*
-  /bin/chmod -Rf g+rwx /usr/local/*
-  /bin/chmod 755 /usr/local/share/zsh /usr/local/share/zsh/site-functions
+      # Cache directories
+      mkdir -p /Library/Caches/Homebrew
+      chmod g+rwx /Library/Caches/Homebrew
+      chown $ConsoleUser:staff /Library/Caches/Homebrew
 
-  # Cache directories
-  mkdir -p /Library/Caches/Homebrew
-  chmod g+rwx /Library/Caches/Homebrew
-  chown $ConsoleUser:staff /Library/Caches/Homebrew
+      # Create a system wide cache folder
+      mkdir -p /Library/Caches/Homebrew
+      chmod g+rwx /Library/Caches/Homebrew
+      chown $ConsoleUser:staff /Library/Caches/Homebrew
 
-  # Create a system wide cache folder
-  mkdir -p /Library/Caches/Homebrew
-  chmod g+rwx /Library/Caches/Homebrew
-  chown $ConsoleUser:staff /Library/Caches/Homebrew
-
-  # Symlink Homebrew to the usual place
-  ln -s /usr/local/Homebrew/bin/brew /usr/local/bin/brew
-
-  # Run an initial update
-  sudo -H -iu ${ConsoleUser} /usr/local/bin/brew update  </dev/null
-
-  # Disable Homebrew analytics
-  sudo -H -iu ${ConsoleUser} /usr/local/bin/brew analytics off  </dev/null
-
-# If Homebrew is already installed then just echo that it is already installed
+      # Symlink Homebrew to the usual place
+      ln -s /usr/local/Homebrew/bin/brew /usr/local/bin/brew
+    else
+      echo "Installing arm64 Homebrew..."
+      /bin/mkdir -p /opt/homebrew
+      curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C /opt/homebrew
+      /bin/chmod -Rf u+rwx /opt/homebrew
+      /usr/sbin/chown -Rf ${ConsoleUser} /opt/homebrew
+    fi
+    echo "Disabling Homebrew analytics..."
+    sudo -H -iu ${ConsoleUser} ${BREW_BIN_PATH}/brew analytics off
 else
-  echo "Homebrew is already installed"
+    echo "Homebrew already installed."
 fi
+### END INSTALL HOMEBREW ###
