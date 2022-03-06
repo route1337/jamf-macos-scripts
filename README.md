@@ -26,7 +26,6 @@ The following extension attributes are available in this repo
 
 Donate To Support These Scripts
 ------------
-Route 1337, LLC provides these scripts for the DevOps and CPE community free of charge.  
-If you find these scripts useful, please consider using the GitHub Sponsors button to donate to the people who contributed to this project.
+Route 1337, LLC operates entirely on donations. If you find these Vagrant boxes useful, please consider using the GitHub Sponsors button to show your continued support.
 
 Thank you for your support!
