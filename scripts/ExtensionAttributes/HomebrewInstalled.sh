@@ -4,7 +4,7 @@
 # Function: Check if Homebrew's "brew" binary exists on the local machine
 # Requirements: None
 #
-# Copyright 2020, Route 1337, LLC, All Rights Reserved.
+# Copyright 2020-2022, Route 1337, LLC, All Rights Reserved.
 #
 # Maintainers:
 # - Matthew Ahrenstein: matthew@route1337.com
@@ -12,7 +12,16 @@
 # See LICENSE
 #
 
-if [ -f "/usr/local/bin/brew" ] ; then
+# Check if Apple Silicon
+if [ "$(uname -m)" == "arm64" ]; then
+	IS_ARM=1
+	BREW_BIN_PATH="/opt/homebrew/bin"
+else
+	IS_ARM=0
+	BREW_BIN_PATH="/usr/local/bin"
+fi
+
+if [ -f "${BREW_BIN_PATH}/brew" ] ; then
     RESULT="Yes"
 else
     RESULT="No"

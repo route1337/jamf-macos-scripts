@@ -12,10 +12,19 @@
 # See LICENSE
 #
 
-# Apple approved way to get the currently logged in user (Thanks to Froger from macadmins.org and https://developer.apple.com/library/content/qa/qa1133/_index.html)
-ConsoleUser="$(/usr/bin/python -c 'from SystemConfiguration import SCDynamicStoreCopyConsoleUser; import sys; username = (SCDynamicStoreCopyConsoleUser(None, None, None) or [None])[0]; username = [username,""][username in [u"loginwindow", None, u""]]; sys.stdout.write(username + "\n");')"
+# Check if Apple Silicon
+if [ "$(uname -m)" == "arm64" ]; then
+	IS_ARM=1
+  ConsoleUser="$( echo "show State:/Users/ConsoleUser" | scutil | awk '/Name :/ && ! /loginwindow/ { print $3 }' )"
+else
+	IS_ARM=0
+  ConsoleUser="$(/usr/bin/python -c 'from SystemConfiguration import SCDynamicStoreCopyConsoleUser; import sys; username = (SCDynamicStoreCopyConsoleUser(None, None, None) or [None])[0]; username = [username,""][username in [u"loginwindow", None, u""]]; sys.stdout.write(username + "\n");')"
+fi
+
 # Path to a zsh configuration file
 zsh_config="https://raw.githubusercontent.com/ahrenstein/noodling/main/zsh/mac-zshrc"
 
 # Download a zsh configuration for the current user
 sudo -H -iu ${ConsoleUser} /usr/bin/curl https://raw.githubusercontent.com/ahrenstein/noodling/main/zsh/mac-zshrc > /Users/${ConsoleUser}/.zshrc
+chown ${ConsoleUser}:staff /Users/${ConsoleUser}/.zshrc
+#TODO additional Terminal configuration such as the prompt
