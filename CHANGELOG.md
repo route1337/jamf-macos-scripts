@@ -2,6 +2,12 @@ Jamf Pro Scripts for macOS Management - Changelog
 ==============
 A list of all the changes made to this repo
 
+Version 0.1.6
+-------------
+
+1. Scripts for Homebrew have been fixed to deal with changes in Monterey
+2. Apple Silicon detection logic fixed
+
 Version 0.1.5
 -------------
 
