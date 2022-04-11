@@ -110,11 +110,37 @@ if test ! "$(sudo -u ${ConsoleUser} which brew)"; then
       echo "Installing arm64 Homebrew..."
       /bin/mkdir -p /opt/homebrew
       curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C /opt/homebrew
+
+      # Core directories
+      /bin/mkdir -p /opt/homebrew/Cellar /opt/homebrew/Homebrew /opt/homebrew/Frameworks /opt/homebrew/bin /opt/homebrew/etc /opt/homebrew/Caskroom
+      /bin/mkdir -p /opt/homebrew/include /opt/homebrew/lib /opt/homebrew/opt /opt/homebrew/sbin /opt/homebrew/var/homebrew/linked
+      /bin/mkdir -p /opt/homebrew/share/zsh/site-functions /opt/homebrew/var
+      /bin/mkdir -p /opt/homebrew/share/doc /opt/homebrew/man/man1 /opt/homebrew/share/man/man1
+      /usr/sbin/chown -R $ConsoleUser:admin /opt/homebrew/*
+      /bin/chmod -Rf g+rwx /opt/homebrew/*
+      /bin/chmod 755 /opt/homebrew/share/zsh /opt/homebrew/share/zsh/site-functions
+
+      # Cache directories
+      mkdir -p /Library/Caches/Homebrew
+      chmod g+rwx /Library/Caches/Homebrew
+      chown $ConsoleUser:staff /Library/Caches/Homebrew
+
+      # Create a system wide cache folder
+      mkdir -p /Library/Caches/Homebrew
+      chmod g+rwx /Library/Caches/Homebrew
+      chown $ConsoleUser:staff /Library/Caches/Homebrew
+
       /bin/chmod -Rf u+rwx /opt/homebrew
-      /usr/sbin/chown -Rf ${ConsoleUser} /opt/homebrew
+      /usr/sbin/chown -Rf ${ConsoleUser}:staff /opt/homebrew
     fi
-    echo "Disabling Homebrew analytics..."
-    sudo -H -iu ${ConsoleUser} ${BREW_BIN_PATH}/brew analytics off
+    # Run an initial update
+    sudo -H -iu ${ConsoleUser} ${BREW_BIN_PATH}/brew update  </dev/null
+    # Disable Homebrew analytics
+    sudo -H -iu ${ConsoleUser} ${BREW_BIN_PATH}/brew analytics off  </dev/null
+    # Disable Homebrew analytics
+    sudo -H -iu ${ConsoleUser} ${BREW_BIN_PATH}/brew tap homebrew/cask  </dev/null
+
+
 else
     echo "Homebrew already installed."
 fi
