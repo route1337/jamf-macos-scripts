@@ -4,7 +4,7 @@
 # Function: Check if Homebrew's "brew" binary exists on the local machine
 # Requirements: None
 #
-# Copyright 2020-2022, Route 1337, LLC, All Rights Reserved.
+# Copyright 2022, Route 1337 LLC, All Rights Reserved.
 #
 # Maintainers:
 # - Matthew Ahrenstein: matthew@route1337.com

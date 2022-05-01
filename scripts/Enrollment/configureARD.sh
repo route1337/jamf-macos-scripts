@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Script Name: configureTerminal.sh
-# Function: Configure Terminal for the first user added to a new Mac during the post-DEP enrollment DEPNotify run
+# Script Name: configureARD.sh
+# Function: Configure Apple Remote Desktop using the new mandatory API-first method Apple requires
 # Requirements: DEP, Jamf, Homebrew
 #
 # Copyright 2022, Route 1337 LLC, All Rights Reserved.
