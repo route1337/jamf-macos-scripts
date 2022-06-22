@@ -4,7 +4,7 @@
 # Function: Check if the firmware password has been set on the host
 # Requirements: None
 #
-# Copyright 2020, Route 1337, LLC, All Rights Reserved.
+# Copyright 2020-2022, Route 1337 LLC, All Rights Reserved.
 #
 # Maintainers:
 # - Matthew Ahrenstein: matthew@route1337.com

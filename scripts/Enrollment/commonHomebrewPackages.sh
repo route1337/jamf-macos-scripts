@@ -4,7 +4,7 @@
 # Function: Install some common Homebrew (brew.sh) brews and casks to the first user added to a new Mac during the post-DEP enrollment DEPNotify run
 # Requirements: DEP, Jamf, Homebrew
 #
-# Copyright 2020-2022, Route 1337, LLC, All Rights Reserved.
+# Copyright 2020-2022, Route 1337 LLC, All Rights Reserved.
 #
 # Maintainers:
 # - Matthew Ahrenstein: matthew@route1337.com
