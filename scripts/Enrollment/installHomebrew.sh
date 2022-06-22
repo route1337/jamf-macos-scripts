@@ -4,7 +4,7 @@
 # Function: Deploy Homebrew (brew.sh) to the first user added to a new Mac during the post-DEP enrollment DEPNotify run
 # Requirements: DEP, Jamf
 #
-# Copyright 2022, Route 1337 LLC, All Rights Reserved.
+# Copyright 2020-2022, Route 1337 LLC, All Rights Reserved.
 #
 # Maintainers:
 # - Matthew Ahrenstein: matthew@route1337.com
