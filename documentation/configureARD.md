@@ -16,6 +16,15 @@ This script has been tested on the following macOS versions
 |------------------------------------------|-------------------------------------|--------------|
 | Monterey                                 | 12.1                                | Yes          |
 
+API Permissions
+---------------
+The following permissiosn are needed for the API user
+
+| Privilege               | Object                               | CRUD |
+|-------------------------|--------------------------------------|------|
+| Jamf Pro Server Objects | Computers                            | CR   |
+| Jamf Pro Server Actions | Send Computer Remote Desktop Command | Yes  |
+
 Script Operations
 ------------
 This script will perform the following operations

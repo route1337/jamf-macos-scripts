@@ -9,24 +9,53 @@
 # Maintainers:
 # - Matthew Ahrenstein: matthew@route1337.com
 #
+# Contributors:
+# - Jamf API Functions: "junjishimazaki" (https://u.route1337.net/l7Tyq3L5)
+#
 # See LICENSE
 #
 
+# Get variables passed in from Jamf
+JAMF_API_USER="$4"
+JAMF_API_PASSWORD="$5"
+
 # Check if Apple Silicon
 if [ "$(uname -m)" == "arm64" ]; then
-	IS_ARM=1
-	BREW_BIN_PATH="/opt/homebrew/bin"
-    ConsoleUser="$( echo "show State:/Users/ConsoleUser" | scutil | awk '/Name :/ && ! /loginwindow/ { print $3 }' )"
+  IS_ARM=1
+  BREW_BIN_PATH="/opt/homebrew/bin"
+  ConsoleUser="$( echo "show State:/Users/ConsoleUser" | scutil | awk '/Name :/ && ! /loginwindow/ { print $3 }' )"
 else
-	IS_ARM=0
-	BREW_BIN_PATH="/usr/local/bin"
-    ConsoleUser="$(/usr/bin/python -c 'from SystemConfiguration import SCDynamicStoreCopyConsoleUser; import sys; username = (SCDynamicStoreCopyConsoleUser(None, None, None) or [None])[0]; username = [username,""][username in [u"loginwindow", None, u""]]; sys.stdout.write(username + "\n");')"
+  IS_ARM=0
+  BREW_BIN_PATH="/usr/local/bin"
+  ConsoleUser="$(/usr/bin/python -c 'from SystemConfiguration import SCDynamicStoreCopyConsoleUser; import sys; username = (SCDynamicStoreCopyConsoleUser(None, None, None) or [None])[0]; username = [username,""][username in [u"loginwindow", None, u""]]; sys.stdout.write(username + "\n");')"
 fi
 
-# Path to a zsh configuration file
-zsh_config="https://raw.githubusercontent.com/ahrenstein/noodling/main/zsh/mac-zshrc"
+### Run through the new Jamf API flow (mandatory as of Monterey) ###
 
-# Download a zsh configuration for the current user
-sudo -H -iu ${ConsoleUser} /usr/bin/curl https://raw.githubusercontent.com/ahrenstein/noodling/main/zsh/mac-zshrc > /Users/${ConsoleUser}/.zshrc
-chown ${ConsoleUser}:staff /Users/${ConsoleUser}/.zshrc
-#TODO additional Terminal configuration such as the prompt
+# Get the URL of the Jamf API
+JAMF_API_URL=$( /usr/bin/defaults read /Library/Preferences/com.jamfsoftware.jamf.plist jss_url )
+# Encode the API Creds
+ENCODED_CREDS=$(printf "$JAMF_API_USER:$JAMF_API_PASSWORD" | iconv -t ISO-8859-1 | base64 -i -)
+# Get an auth token
+AUTH_TOKEN=$( /usr/bin/curl -s "${JAMF_API_URL}api/v1/auth/token" -H "authorization: Basic ${ENCODED_CREDS}" -X POST | tr -d "\n" )
+# Remove the expiration from the token
+FOREVER_TOKEN=$( /usr/bin/osascript -l 'JavaScript' -e "JSON.parse(\`$AUTH_TOKEN\`).token" )
+# Get the serial number of the Mac and the Jamf ID for it
+MAC_SERIAL=`system_profiler SPHardwareDataType | awk '/Serial/ {print $4}'`
+echo "The Mac's serial number is: ${MAC_SERIAL}"
+MAC_JAMF_ID=$(curl --header "Authorization: Bearer $FOREVER_TOKEN" "${JAMF_API_URL}JSSResource/computers/serialnumber/${MAC_SERIAL}" -X GET | xmllint --xpath '/computer/general/id/text()' -)
+echo "The Mac's Jamf ID is: ${MAC_JAMF_ID}"
+# Send the actual MDM command to enable remote desktop
+echo "Enabling ARD via MDM..."
+/usr/bin/curl --header "Authorization: Bearer $FOREVER_TOKEN" "${JAMF_API_URL}JSSResource/computercommands/command/EnableRemoteDesktop/id/${MAC_JAMF_ID}" -X POST
+# Expire the token now that we're done with it
+/usr/bin/curl "${JAMF_API_URL}uapi/auth/invalidateToken" --silent --request POST --header "Authorization: Bearer $FOREVER_TOKEN"
+
+### Configure typical ARD setup via kickstart ###
+
+PRIVILEGES="-DeleteFiles -ControlObserve -TextMessages -OpenQuitApps -GenerateReports -RestartShutDown -SendFiles -ChangeSettings"
+echo "Enabling ARD for all users via kickstart..."
+/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -allowAccessFor -allUsers -privs -all -clientopts -setmenuextra -menuextra yes
+
+echo "Done"
+
