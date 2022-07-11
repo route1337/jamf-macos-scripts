@@ -2,6 +2,11 @@ Jamf Pro Scripts for macOS Management - Changelog
 ==============
 A list of all the changes made to this repo
 
+Version 0.1.7
+-------------
+
+1. Quick script for fixing Spotlight indexing
+
 Version 0.1.6
 -------------
 
