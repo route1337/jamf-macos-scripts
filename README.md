@@ -1,9 +1,9 @@
 Jamf Pro Scripts for macOS Management
-==================================
+=====================================
 This repository contains various scripts for managing macOS devices through the Jamf Pro MDM system. 
 
 Scripts
-------------
+-------
 The following scripts are available in this repo
 
 | Script                                                              | Short Description                                               | DEP Required | macOS Versions Tested | Deployment Methods Supported                       |
@@ -15,7 +15,7 @@ The following scripts are available in this repo
 | [Configure ARD](documentation/configureARD.md)                      | Configure Apple Remote Desktop via Jamf API and local kickstart | Yes          | 12.1(AS)              | [DEPNotify](https://gitlab.com/Mactroll/DEPNotify) |
 
 Extension Attributes
-------------
+--------------------
 The following extension attributes are available in this repo
 
 | Extension Attribute      | Short Description                                        | Recommended Inventory Display Location | macOS Versions Tested |
@@ -24,6 +24,15 @@ The following extension attributes are available in this repo
 | FusionSerialsNumbers.sh  | Return the serial numbers detected for VMware Fusion 10+ | Extension Attributes                   | 12.1(AS)              |
 | FirmwarePasswordCheck.sh | Check if the firmware password has been set              | Extension Attributes                   | 12.1(AS)              |
 | ARDStatus.sh             | Return the current status of Apple Remote Desktop        | Operating System                       | 12.1(AS)              |
+
+Fixes
+-----
+The following scripts are used to perform various end user fixes that normally require IT support
+
+| Extension Attribute | Short Description                                     | Recommended Inventory Display Location | macOS Versions Tested |
+|---------------------|-------------------------------------------------------|----------------------------------------|-----------------------|
+| fixSpotlight.sh     | Disable Spotlight, delete the index, and re-enable it | Quick Fixes                            | 12.4(AS)              |
+
 
 Donate To Support These Scripts
 ------------

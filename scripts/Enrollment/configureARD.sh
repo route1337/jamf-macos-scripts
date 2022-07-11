@@ -4,7 +4,7 @@
 # Function: Configure Apple Remote Desktop using the new mandatory API-first method Apple requires
 # Requirements: DEP, Jamf, Homebrew
 #
-# Copyright 2020-2022, Route 1337 LLC, All Rights Reserved.
+# Copyright 2020, Route 1337 LLC, All Rights Reserved.
 #
 # Maintainers:
 # - Matthew Ahrenstein: matthew@route1337.com
