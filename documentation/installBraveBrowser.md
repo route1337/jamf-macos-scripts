@@ -1,6 +1,6 @@
-Jamf Pro Scripts for macOS Management - Install GPG Suite
+Jamf Pro Scripts for macOS Management - Install Brave Browser
 ==============
-This script runs during the post-DEP DEPNotify run and installs [GPG Suite](https://gpgtools.org/) for the initially created user
+This script runs during the post-DEP DEPNotify run and installs [Brave](https://brave.com/) for the initially created user
 
 Requirements
 ------------
@@ -11,22 +11,20 @@ macOS Compatibility Matrix
 ------------
 This script has been tested on the following macOS versions
 
-| Tested macOS Major Version               | Expected Working Minor Versions     | DEP Required |
-|------------------------------------------|-------------------------------------|--------------|
-| Monterey                                 | 12.1                                | Yes          |
+| Tested macOS Major Version | Expected Working Minor Versions | DEP Required |
+|----------------------------|---------------------------------|--------------|
+| Ventura                    | 13.1                            | Yes          |
 
 Script Operations
 ------------
 This script will perform the following operations
 
-1. Download and install the latest GPG Suite from https://gpgtools.org/
+1. Install the Brave Browser
 
 Limitations
 ------------
 
-1. This script requires access to the internet
-2. This script relies on https://gpgtools.org/ not changing their download link format
-3. This script requires an initial user to be created by the end user during the macOS OOBE 
+1. None :)
 
 Known Issues
 ------------
@@ -34,6 +32,6 @@ Known Issues
 
 Use Cases
 ------------
-Installing GPG Suite for use by the end user
+Switching to a Chromium browser that respect end user privacy and choice better than Google Chrome does.
 
 [Back to main README](../README.md)
