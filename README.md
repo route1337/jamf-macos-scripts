@@ -8,6 +8,7 @@ The following scripts are available in this repo
 
 | Script                                                              | Short Description                                               | DEP Required | macOS Versions Tested | Deployment Methods Supported                       |
 |---------------------------------------------------------------------|-----------------------------------------------------------------|--------------|-----------------------|----------------------------------------------------|
+| [Install Brave Browser](documentation/installBraveBrowser.md)       | Install The Brave Browser for the initial user                  | Yes          | 13.1(AS)              | [DEPNotify](https://gitlab.com/Mactroll/DEPNotify) |
 | [Install Homebrew](documentation/installHomebrew.md)                | Install Homebrew for the initial user                           | Yes          | 12.1(AS)              | [DEPNotify](https://gitlab.com/Mactroll/DEPNotify) |
 | [Common Homebrew Packages](documentation/commonHomebrewPackages.md) | Install common Homebrew brews and casks for the initial user    | Yes          | 12.1(AS)              | [DEPNotify](https://gitlab.com/Mactroll/DEPNotify) |
 | [Install GPG Suite](documentation/installGPGSuite.md)               | Install GPG Suite for the initial user                          | Yes          | 12.1(AS)              | [DEPNotify](https://gitlab.com/Mactroll/DEPNotify) |
