@@ -2,6 +2,11 @@ Jamf Pro Scripts for macOS Management - Changelog
 ==============
 A list of all the changes made to this repo
 
+Version 0.1.8
+-------------
+
+1. Added the `installBraveBrowser.sh` script to replace Chrome
+
 Version 0.1.7
 -------------
 
