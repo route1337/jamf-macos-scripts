@@ -2,6 +2,11 @@ Jamf Pro Scripts for macOS Management - Changelog
 ==============
 A list of all the changes made to this repo
 
+Version 0.1.9
+-------------
+
+1. Migrating Intel Mac ConsoleUser detection to a modern OS method 
+
 Version 0.1.8
 -------------
 
