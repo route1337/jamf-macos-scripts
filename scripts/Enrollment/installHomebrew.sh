@@ -59,12 +59,13 @@ if [[ ( ${osvers_major} -eq 10 && ${osvers_minor} -ge 9 ) || ( ${osvers_major} -
 	fi
 
 	# Check to see if the softwareupdate tool has returned more than one Xcode
-	# command line tool installation option. If it has, use the last one listed
-	# as that should be the latest Xcode command line tool installer.
+	# command line tool installation option. If it has, use the one with the
+	# largest detected version number
 
 	if (( $(grep -c . <<<"$cmd_line_tools") > 1 )); then
-	   cmd_line_tools_output="$cmd_line_tools"
-	   cmd_line_tools=$(printf "$cmd_line_tools_output" | tail -1)
+	   version_check=$(echo "$cmd_line_tools" | awk -F'-' '{print $2}' | sort -V | tail -n1)
+	   newest_version=$(echo "$cmd_line_tools" | grep -F "Xcode-$version_check")
+	   cmd_line_tools=$newest_version
 	fi
 	#Install the command line tools
 	softwareupdate -i "$cmd_line_tools" --verbose
