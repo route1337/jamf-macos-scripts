@@ -1,6 +1,6 @@
-Jamf Pro Scripts for macOS Management - Configure Terminal
+Jamf Pro Scripts for macOS Management - Configure ARD
 ==============
-This script runs during the post-DEP DEPNotify run and Configures Apple Remote Desktop via both the new mandatory API method
+This script runs during the post-DEP Setup-Your-Mac run and Configures Apple Remote Desktop via both the new mandatory API method
 and then via kickstart for customization
 
 Requirements
@@ -12,9 +12,9 @@ macOS Compatibility Matrix
 ------------
 This script has been tested on the following macOS versions
 
-| Tested macOS Major Version               | Expected Working Minor Versions     | DEP Required |
-|------------------------------------------|-------------------------------------|--------------|
-| Monterey                                 | 12.1                                | Yes          |
+| Tested macOS Major Version | Expected Working Minor Versions | DEP Required |
+|----------------------------|---------------------------------|--------------|
+| Sequoia                    | 15.0                            | Yes          |
 
 API Permissions
 ---------------

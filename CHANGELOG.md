@@ -2,6 +2,13 @@ Jamf Pro Scripts for macOS Management - Changelog
 ==============
 A list of all the changes made to this repo
 
+Version 0.1.11
+--------------
+
+1. Remove an unused `killall` command for the GPG Suite install script
+2. Remove a cask tap that's no longer needed for the Homebrew install script
+3. Update documentation to reflect moving from DEPNotify to Setup-Your-Mac
+
 Version 0.1.10
 --------------
 
