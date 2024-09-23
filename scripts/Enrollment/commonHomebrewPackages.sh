@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Script Name: commonHomebrewPackages.sh
-# Function: Install some common Homebrew (brew.sh) brews and casks to the first user added to a new Mac during the post-DEP enrollment DEPNotify run
+# Function: Install some common Homebrew (brew.sh) brews and casks to the first user added to a new Mac during the post-DEP enrollment Setup-Your-Mac run
 # Requirements: DEP, Jamf, Homebrew
 #
 # Copyright 2020, Route 1337 LLC, All Rights Reserved.

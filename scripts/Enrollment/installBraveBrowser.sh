@@ -2,7 +2,7 @@
 #
 # Script Name: installBraveBrowser.sh
 # Function: This script grabs and installs the latest Brave Browser so you don't have to maintain packages
-# Requirements: DEP, DEPNotify
+# Requirements: DEP, Setup-Your-Mac
 #
 # Copyright 2023, Route 1337, LLC, All Rights Reserved.
 #

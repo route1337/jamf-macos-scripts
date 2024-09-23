@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Script Name: installHomebrew.sh
-# Function: Deploy Homebrew (brew.sh) to the first user added to a new Mac during the post-DEP enrollment DEPNotify run
+# Function: Deploy Homebrew (brew.sh) to the first user added to a new Mac during the post-DEP enrollment Setup-Your-Mac run
 # Requirements: DEP, Jamf
 #
 # Copyright 2020, Route 1337 LLC, All Rights Reserved.
@@ -139,8 +139,6 @@ if test ! "$(sudo -u ${ConsoleUser} which brew)"; then
     sudo -H -iu ${ConsoleUser} ${BREW_BIN_PATH}/brew update  </dev/null
     # Disable Homebrew analytics
     sudo -H -iu ${ConsoleUser} ${BREW_BIN_PATH}/brew analytics off  </dev/null
-    # Disable Homebrew analytics
-    sudo -H -iu ${ConsoleUser} ${BREW_BIN_PATH}/brew tap homebrew/cask  </dev/null
 
 
 else

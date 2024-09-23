@@ -1,6 +1,6 @@
 Jamf Pro Scripts for macOS Management - Install Common Homebrew Packages
 ==============
-This script runs during the post-DEP DEPNotify run and installs some common [Homebrew](https://brew.sh) brews and casks for the initially created user
+This script runs during the post-DEP Setup-Your-Mac run and installs some common [Homebrew](https://brew.sh) brews and casks for the initially created user
 
 Requirements
 ------------
@@ -11,9 +11,9 @@ macOS Compatibility Matrix
 ------------
 This script has been tested on the following macOS versions
 
-| Tested macOS Major Version               | Expected Working Minor Versions     | DEP Required |
-|------------------------------------------|-------------------------------------|--------------|
-| Monterey                                 | 12.1                                | Yes          |
+| Tested macOS Major Version | Expected Working Minor Versions | DEP Required |
+|----------------------------|---------------------------------|--------------|
+| Sequoia                    | 15.0                            | Yes          |
 
 Script Operations
 ------------
