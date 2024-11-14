@@ -2,6 +2,11 @@ Jamf Pro Scripts for macOS Management - Changelog
 ==============
 A list of all the changes made to this repo
 
+Version 0.1.12
+--------------
+
+1. Fix [configureARD.sh](scripts/Enrollment/configureARD.sh) based on Jamf API changes
+
 Version 0.1.11
 --------------
 
