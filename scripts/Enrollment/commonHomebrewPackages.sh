@@ -21,25 +21,24 @@ else
 	IS_ARM=0
 	BREW_BIN_PATH="/usr/local/bin"
 	ConsoleUser="$( echo "show State:/Users/ConsoleUser" | scutil | awk '/Name :/ && ! /loginwindow/ { print $3 }' )"
-  #ConsoleUser="$(/usr/bin/python -c 'from SystemConfiguration import SCDynamicStoreCopyConsoleUser; import sys; username = (SCDynamicStoreCopyConsoleUser(None, None, None) or [None])[0]; username = [username,""][username in [u"loginwindow", None, u""]]; sys.stdout.write(username + "\n");')"
 fi
 
-# Apple approved way to get the currently logged in user (Thanks to Froger from macadmins.org and https://developer.apple.com/library/content/qa/qa1133/_index.html)
 # Define the taps, brews, and casks we want to install
-taps=("ahrenstein/taps")
-brews=(dockutil git git-crypt git-flow git-lfs gnu-sed telnet thefuck unrar watch wget)
-#casks=(aerial) # Be careful not to install casks that require prompting for sudo. This will not work in an automated fashion and will break the script.
+#taps=("ahrenstein/taps")
+brews=(git curl awscli podman postgresql)
+#casks=(session-manager-plugin) # Be careful not to install casks that require prompting for sudo. This will not work in an automated fashion and will break the script.
+casks_sudo=(session-manager-plugin)
 
 # Check if the tap is already tapped. If not, tap it
-for tap in ${taps[@]}; do
-    cd /tmp/ # This is required to use sudo as another user or you get a getcwd error
-    if sudo -H -iu ${ConsoleUser} ${BREW_BIN_PATH}/brew tap | grep "${tap}"; then
-        echo "${tap} is tapped already. Skipping tapping"
-    else
-        echo "${tap} is either not tapped or not available. Attempting tapping..."
-        sudo -H -iu ${ConsoleUser} ${BREW_BIN_PATH}/brew tap "${tap}"
-    fi
-done
+#for tap in ${taps[@]}; do
+#    cd /tmp/ # This is required to use sudo as another user or you get a getcwd error
+#    if sudo -H -iu ${ConsoleUser} ${BREW_BIN_PATH}/brew tap | grep "${tap}"; then
+#        echo "${tap} is tapped already. Skipping tapping"
+#    else
+#        echo "${tap} is either not tapped or not available. Attempting tapping..."
+#        sudo -H -iu ${ConsoleUser} ${BREW_BIN_PATH}/brew tap "${tap}"
+#    fi
+#done
 
 # Check if the brew is already installed. If not, install it
 for brew in ${brews[@]}; do
@@ -62,3 +61,14 @@ done
 #        sudo -H -iu ${ConsoleUser} ${BREW_BIN_PATH}/brew cask install ${cask}
 #    fi
 #done
+
+# Check if the cask is already installed. If not, install it
+for cask in ${casks_sudo[@]}; do
+    cd /tmp/ # This is required to use sudo as another user or you get a getcwd error
+    if [[ ${BREW_BIN_PATH}/brew cask info ${cask}) != *Not\ installed* ]]; then
+        echo "${cask} is installed already. Skipping installation"
+    else
+        echo "${cask} is either not installed or not available. Attempting installation..."
+        ${BREW_BIN_PATH}/brew cask install ${cask}
+    fi
+done
