@@ -41,10 +41,11 @@ ENCODED_CREDS=$(printf "$JAMF_API_USER:$JAMF_API_PASSWORD" | iconv -t ISO-8859-1
 AUTH_TOKEN=$( /usr/bin/curl -s "${JAMF_API_URL}api/v1/auth/token" -H "authorization: Basic ${ENCODED_CREDS}" -X POST | tr -d "\n" )
 # Remove the expiration from the token
 FOREVER_TOKEN=$( /usr/bin/osascript -l 'JavaScript' -e "JSON.parse(\`$AUTH_TOKEN\`).token" )
-# Get the serial number of the Mac and the Jamf ID for it
-MAC_SERIAL=`system_profiler SPHardwareDataType | awk '/Serial/ {print $4}'`
-echo "The Mac's serial number is: ${MAC_SERIAL}"
-MAC_JAMF_ID=$(curl --header "Authorization: Bearer $FOREVER_TOKEN" "${JAMF_API_URL}JSSResource/computers/serialnumber/${MAC_SERIAL}" -X GET | xmllint --xpath '/computer/general/id/text()' -)
+#Get the Mac's UDID
+UDID=$( /usr/sbin/ioreg -rd1 -c IOPlatformExpertDevice | awk '/IOPlatformUUID/ { split($0, line, "\""); printf("%s\n", line[4]); }' )
+# Get the Mac's Jamf ID from the computer record
+MAC_RECORD=$( /usr/bin/curl -s "${JAMF_API_URL}api/v1/computers-inventory?section=USER_AND_LOCATION&filter=udid%3D%3D%22${UDID}%22" -H "authorization: Bearer ${FOREVER_TOKEN}" )
+MAC_JAMF_ID=$( /usr/bin/osascript -l 'JavaScript' -e "JSON.parse(\`$MAC_RECORD\`).results[0].id" )
 echo "The Mac's Jamf ID is: ${MAC_JAMF_ID}"
 # Send the actual MDM command to enable remote desktop
 echo "Enabling ARD via MDM..."
@@ -59,4 +60,3 @@ echo "Enabling ARD for all users via kickstart..."
 /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -allowAccessFor -allUsers -privs -all -clientopts -setmenuextra -menuextra yes
 
 echo "Done"
-
