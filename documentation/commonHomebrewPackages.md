@@ -29,17 +29,29 @@ The following brews and casks are installed
 | Package                        | Package Type  | Purpose                                                                       |
 |--------------------------------|---------------|-------------------------------------------------------------------------------|
 | ahrenstein/taps                | tap           | A custom tap that has Duo Support for JumpCLoud in saml2aws                   |
+| cloudflare/cloudflare          | tap           | Cloudflare's official tap                                                     |
+| hashicorp/tap                  | tap           | HashiCorp's official tap (Terraform, Vault, Packer, etc.)                     |
+| parera10/csshx                 | tap           | Tap for csshX (cluster SSH); only the csshx formula is trusted                |
+| scienceguns/taps               | tap           | ScienceGuns' custom tap                                                       |
 | dockutil                       | brew          | Dock layout management utility (for use in other scripts)                     |
+| fzf                            | brew          | Command-line fuzzy finder                                                     |
 | git                            | brew          | A more up to date version of git                                              |
 | git-crypt                      | brew          | git extension for encrypting secrets in repos                                 |
-| git-flow                       | brew          | A tool to make git-flow usage simple                                          |
 | git-lfs                        | brew          | git's LFS add-on                                                              |
 | gnu-sed                        | brew          | GNU version of sed                                                            |
+| jq                             | brew          | Command-line JSON processor                                                   |
+| openssl                        | brew          | Current OpenSSL toolkit                                                       |
+| pyenv                          | brew          | Python version manager                                                        |
+| readline                       | brew          | GNU readline library (used when pyenv builds Python)                          |
+| ripgrep                        | brew          | Fast recursive search tool (rg)                                               |
+| saml2aws                       | brew          | AWS CLI login through a SAML identity provider                                |
 | telnet                         | brew          | Common network testing tool                                                   |
 | thefuck                        | brew          | bash typo correction tool                                                     |
-| unrar                          | brew          | A simple tool to expand .rar archives                                         |
 | watch                          | brew          | Linux-style watch command                                                     |
 | wget                           | brew          | Linux-style wget command                                                      |
+| yq                             | brew          | Command-line YAML, JSON and XML processor                                     |
+| yt-dlp                         | brew          | Video downloader                                                              |
+| zlib                           | brew          | Compression library (used when pyenv builds Python)                           |
 
 Limitations
 ------------
