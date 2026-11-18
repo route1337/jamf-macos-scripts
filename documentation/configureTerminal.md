@@ -20,11 +20,13 @@ Script Operations
 This script will perform the following operations
 
 1. Deploy a custom `.zshrc` to the initial user during DEP enrollment.
+2. Configure `gpg-agent` for SSH authentication with a Yubikey, per Step 5 of the [Route 1337 Yubikey guide](https://www.route1337.com/tutorials/using-a-yubikey-4-and-gpg-for-ssh-on-a-mac/)
 
 Limitations
 ------------
 
 1. This script requires access to a [specific GitHub repo](https://github.com/ahrenstein/noodling)
+2. The GPG Suite install script must run first so `pinentry-mac` exists
 
 Known Issues
 ------------

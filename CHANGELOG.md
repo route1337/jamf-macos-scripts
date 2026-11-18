@@ -2,6 +2,21 @@ Jamf Pro Scripts for macOS Management - Changelog
 ==============
 A list of all the changes made to this repo
 
+Version 0.2.0
+--------------
+
+1. Install Homebrew as a git checkout of the `main` branch instead of the retired `master` tarball, which current Homebrew refuses to run
+2. Convert existing tarball-based Homebrew installs to a git checkout when the install script is re-run
+3. Make the Homebrew scripts exit non-zero on failure so Jamf reports them as failed
+4. Fix the common packages script reporting brews as installed when `brew` itself was erroring
+5. Configure Terminal now sets up gpg-agent for SSH with a Yubikey (Step 5 of the Route 1337 Yubikey guide)
+6. Configure Terminal no longer overwrites `.zshrc` if the download fails
+7. Install Homebrew accepts the Xcode license when full Xcode is installed, since `git` and `brew` refuse to run until it is accepted
+8. Common Homebrew Packages no longer installs `unrar` (removed from Homebrew) or `git-flow` (deprecated in Homebrew)
+9. Common Homebrew Packages trusts its own taps, since Homebrew now ignores formulae and casks from untrusted taps
+10. Common Homebrew Packages now also installs fzf, jq, openssl, pyenv, readline, ripgrep, saml2aws, yq, yt-dlp and zlib
+11. Common Homebrew Packages now also adds the cloudflare/cloudflare, hashicorp/tap, parera10/csshx and scienceguns/taps taps (only the csshx formula is trusted from parera10/csshx)
+
 Version 0.1.12
 --------------
 

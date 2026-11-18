@@ -79,69 +79,102 @@ fi
 
 # Test if Homebrew is installed and install it if it is not
 ### INSTALL HOMEBREW ###
-echo "Checking if Homebrew is installed..."
-if test ! "$(sudo -u ${ConsoleUser} which brew)"; then
-    if [[ "$IS_ARM" == 0 ]];then
-      echo "Installing x86_64 Homebrew..."
-      # Manually install the initial Homebrew
-      /bin/mkdir -p /usr/local/Homebrew
-      curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C /usr/local/Homebrew
-
-      # Core directories
-      /bin/mkdir -p /usr/local/Cellar /usr/local/Homebrew /usr/local/Frameworks /usr/local/bin /usr/local/etc /usr/local/Caskroom
-      /bin/mkdir -p /usr/local/include /usr/local/lib /usr/local/opt /usr/local/sbin /usr/local/var/homebrew/linked
-      /bin/mkdir -p /usr/local/share/zsh/site-functions /usr/local/var
-      /bin/mkdir -p /usr/local/share/doc /usr/local/man/man1 /usr/local/share/man/man1
-      /usr/sbin/chown -R $ConsoleUser:admin /usr/local/*
-      /bin/chmod -Rf g+rwx /usr/local/*
-      /bin/chmod 755 /usr/local/share/zsh /usr/local/share/zsh/site-functions
-
-      # Cache directories
-      mkdir -p /Library/Caches/Homebrew
-      chmod g+rwx /Library/Caches/Homebrew
-      chown $ConsoleUser:staff /Library/Caches/Homebrew
-
-      # Create a system wide cache folder
-      mkdir -p /Library/Caches/Homebrew
-      chmod g+rwx /Library/Caches/Homebrew
-      chown $ConsoleUser:staff /Library/Caches/Homebrew
-
-      # Symlink Homebrew to the usual place
-      ln -s /usr/local/Homebrew/bin/brew /usr/local/bin/brew
-    else
-      echo "Installing arm64 Homebrew..."
-      /bin/mkdir -p /opt/homebrew
-      curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C /opt/homebrew
-
-      # Core directories
-      /bin/mkdir -p /opt/homebrew/Cellar /opt/homebrew/Homebrew /opt/homebrew/Frameworks /opt/homebrew/bin /opt/homebrew/etc /opt/homebrew/Caskroom
-      /bin/mkdir -p /opt/homebrew/include /opt/homebrew/lib /opt/homebrew/opt /opt/homebrew/sbin /opt/homebrew/var/homebrew/linked
-      /bin/mkdir -p /opt/homebrew/share/zsh/site-functions /opt/homebrew/var
-      /bin/mkdir -p /opt/homebrew/share/doc /opt/homebrew/man/man1 /opt/homebrew/share/man/man1
-      /usr/sbin/chown -R $ConsoleUser:admin /opt/homebrew/*
-      /bin/chmod -Rf g+rwx /opt/homebrew/*
-      /bin/chmod 755 /opt/homebrew/share/zsh /opt/homebrew/share/zsh/site-functions
-
-      # Cache directories
-      mkdir -p /Library/Caches/Homebrew
-      chmod g+rwx /Library/Caches/Homebrew
-      chown $ConsoleUser:staff /Library/Caches/Homebrew
-
-      # Create a system wide cache folder
-      mkdir -p /Library/Caches/Homebrew
-      chmod g+rwx /Library/Caches/Homebrew
-      chown $ConsoleUser:staff /Library/Caches/Homebrew
-
-      /bin/chmod -Rf u+rwx /opt/homebrew
-      /usr/sbin/chown -Rf ${ConsoleUser}:staff /opt/homebrew
-    fi
-    # Run an initial update
-    sudo -H -iu ${ConsoleUser} ${BREW_BIN_PATH}/brew update  </dev/null
-    # Disable Homebrew analytics
-    sudo -H -iu ${ConsoleUser} ${BREW_BIN_PATH}/brew analytics off  </dev/null
-
-
+# Homebrew is installed as a git checkout of the main branch so `brew update` works.
+# (The old tarball/master download is a frozen snapshot that current Homebrew refuses to run.)
+if [[ "$IS_ARM" == 1 ]]; then
+  BREW_PREFIX="/opt/homebrew"
+  BREW_REPO="/opt/homebrew"
 else
-    echo "Homebrew already installed."
+  BREW_PREFIX="/usr/local"
+  BREW_REPO="/usr/local/Homebrew"
 fi
+BREW_GIT_URL="https://github.com/Homebrew/brew"
+GIT_BIN="/usr/bin/git"
+
+if [[ -z "${ConsoleUser}" ]]; then
+  echo "No console user is logged in. Exiting."
+  exit 1
+fi
+
+# If full Xcode is installed and selected, /usr/bin/git refuses to run until Xcode's license
+# is accepted, which also breaks brew. Accept it non-interactively and finish first-launch setup.
+developer_dir="$(/usr/bin/xcode-select -p 2>/dev/null)"
+if [[ "${developer_dir}" == *".app/Contents/Developer" ]]; then
+  echo "Xcode is the active developer directory (${developer_dir}). Accepting the Xcode license..."
+  /usr/bin/xcodebuild -license accept
+  /usr/bin/xcodebuild -runFirstLaunch
+fi
+
+if ! "${GIT_BIN}" --version >/dev/null 2>&1; then
+  echo "git is not available. The Xcode Command Line Tools install likely failed. Exiting."
+  exit 1
+fi
+
+# Run a command as the console user from a directory they can read
+as_user() {
+  cd /tmp/ || exit 1
+  sudo -H -u "${ConsoleUser}" "$@" </dev/null
+}
+
+# Turn BREW_REPO into a git checkout of Homebrew's main branch.
+# Works on an empty directory or on top of an old tarball install (Cellar etc. are git-ignored).
+setup_brew_repo() {
+  /bin/mkdir -p "${BREW_REPO}"
+  /usr/sbin/chown "${ConsoleUser}":admin "${BREW_REPO}"
+  as_user "${GIT_BIN}" -C "${BREW_REPO}" init -q || return 1
+  as_user "${GIT_BIN}" -C "${BREW_REPO}" config remote.origin.url "${BREW_GIT_URL}" || return 1
+  as_user "${GIT_BIN}" -C "${BREW_REPO}" config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*" || return 1
+  as_user "${GIT_BIN}" -C "${BREW_REPO}" fetch --force --tags origin || return 1
+  as_user "${GIT_BIN}" -C "${BREW_REPO}" checkout -q -f -B main origin/main || return 1
+  as_user "${GIT_BIN}" -C "${BREW_REPO}" branch -q -u origin/main main || return 1
+}
+
+# Create the standard Homebrew directories and give them to the console user
+setup_brew_dirs() {
+  /bin/mkdir -p "${BREW_PREFIX}"/{Cellar,Frameworks,bin,etc,Caskroom,include,lib,opt,sbin,var/homebrew/linked}
+  /bin/mkdir -p "${BREW_PREFIX}"/share/zsh/site-functions "${BREW_PREFIX}"/share/doc "${BREW_PREFIX}"/share/man/man1 "${BREW_PREFIX}"/man/man1
+  if [[ "$IS_ARM" == 1 ]]; then
+    /usr/sbin/chown -R "${ConsoleUser}":admin "${BREW_PREFIX}"
+    /bin/chmod -R u+rwx,g+rwx "${BREW_PREFIX}"
+  else
+    for dir in Homebrew Cellar Frameworks bin etc Caskroom include lib opt sbin var share man; do
+      /usr/sbin/chown -R "${ConsoleUser}":admin "${BREW_PREFIX}/${dir}"
+      /bin/chmod -R g+rwx "${BREW_PREFIX}/${dir}"
+    done
+    # Symlink Homebrew to the usual place
+    ln -sf "${BREW_REPO}/bin/brew" "${BREW_PREFIX}/bin/brew"
+  fi
+  /bin/chmod 755 "${BREW_PREFIX}/share/zsh" "${BREW_PREFIX}/share/zsh/site-functions"
+
+  # System wide cache folder
+  /bin/mkdir -p /Library/Caches/Homebrew
+  /bin/chmod g+rwx /Library/Caches/Homebrew
+  /usr/sbin/chown "${ConsoleUser}":staff /Library/Caches/Homebrew
+}
+
+echo "Checking if Homebrew is installed..."
+if [[ -x "${BREW_REPO}/bin/brew" && -d "${BREW_REPO}/.git" ]]; then
+  echo "Homebrew already installed."
+else
+  if [[ -x "${BREW_REPO}/bin/brew" ]]; then
+    echo "Found a Homebrew install that is not a git checkout. Converting it to a git checkout of main..."
+  else
+    echo "Installing Homebrew for ${ConsoleUser} into ${BREW_REPO}..."
+  fi
+  if ! setup_brew_repo; then
+    echo "Failed to clone Homebrew from ${BREW_GIT_URL}. Exiting."
+    exit 1
+  fi
+  setup_brew_dirs
+fi
+
+# Run an update and make sure brew actually works
+if ! sudo -H -iu "${ConsoleUser}" "${BREW_BIN_PATH}/brew" update </dev/null; then
+  echo "brew update failed. Exiting."
+  exit 1
+fi
+# Disable Homebrew analytics
+sudo -H -iu "${ConsoleUser}" "${BREW_BIN_PATH}/brew" analytics off </dev/null
+echo "Homebrew is installed and up to date."
+exit 0
 ### END INSTALL HOMEBREW ###
